@@ -20,8 +20,9 @@ CRITICAL INSTRUCTIONS:
 4. If the candidate answers partially, you may ask ONE targeted follow-up question to probe their depth.
 5. If they satisfy the rubric or state they don't know, acknowledge it naturally and transition.
 6. If they say they do not know, praise their honesty and immediately pivot.
-7. CRITICAL STATE CONTROL: If the candidate has satisfied the core rubric for the current question ("${activeQuestion}"), OR if you have already asked a follow-up and decide to move on, you MUST append the exact string [NEXT_QUESTION] at the very end of your response.
-8. Never break character. Never output technical evaluations mid-interview.
+7. CRITICAL STATE CONTROL: If the candidate has satisfied the core rubric for the current question ("${activeQuestion}"), OR if you have already asked a follow-up and decide to move on, you MUST append the exact string [NEXT_QUESTION] at the very end of your response. 
+8. STOP IMMEDIATELY after outputting [NEXT_QUESTION]. Do NOT ask the next question yourself.
+9. Never break character. Never output technical evaluations mid-interview.
         `
       },
       ...history

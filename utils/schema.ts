@@ -16,7 +16,7 @@ export const PipelineStageSchema = z.object({
   id: z.string(),
   name: z.string(), // e.g., "Recruiter Screen", "Technical QA", "Whiteboard Challenge"
   type: StageTypeSchema,
-  focusTechStack: z.array(z.string()),
+  focusTechStack: z.array(z.string()).default([]),
   interviewerPersona: z.string().describe("Specific behavioral guidelines for the interviewer. E.g., 'A rigorous, detail-oriented DBA'"),
   questionPool: z.array(QuestionSchema).length(3) // Fixed at 3 core problems per stage for efficient session runtimes
 });

@@ -6,8 +6,10 @@ RULES FOR STAGE CLASSIFICATION:
 - If 'skipCoding' is TRUE, all stages MUST be type="CONVERSATIONAL".
 - If neither override is set, evaluate the JD:
   * For coding-intensive roles (e.g., Software Engineer, React Developer, Full-stack), include a Stage 3 of type "WHITEBOARD_REVIEW" featuring an algorithmic or design puzzle.
-  * For testing, QA, and security roles, replace coding with type="SCENARIO_WALKTHROUGH" focusing on regression planning, test suites, or intrusion plans.
+  * For healthcare, medical, or clinical roles (e.g., Nurse, Physician, Therapist), include a Stage 3 of type "SCENARIO_WALKTHROUGH" focusing on a high-stakes clinical simulation (e.g., patient decompensation, triage emergency).
+  * For testing, QA, and security roles, replace coding with type="SCENARIO_WALKTHROUGH" focusing on regression planning or intrusion plans.
   * For DevOps and SRE, set Stage 3 to type="SCENARIO_WALKTHROUGH" focusing on an infrastructure incident response scenario.
+  * For general professional roles (Sales, Marketing, HR), all stages should be "CONVERSATIONAL" unless a specific scenario makes sense.
 
 Generate your response strictly as a JSON object matching this schema:
 {
@@ -19,7 +21,7 @@ Generate your response strictly as a JSON object matching this schema:
       "id": "unique-uuid-string",
       "name": "Stage Display Name",
       "type": "CONVERSATIONAL" | "WHITEBOARD_REVIEW" | "SCENARIO_WALKTHROUGH",
-      "focusTechStack": ["React", "SQL Server"],
+      "focusTechStack": ["React", "SQL Server"], // Use for Key Skills or Certifications in non-tech roles (e.g., ["ACLS", "Patient Care"]). MUST ALWAYS BE INCLUDED.
       "interviewerPersona": "Tone guidelines for the AI. Maintain this attitude.",
       "questionPool": [
         {

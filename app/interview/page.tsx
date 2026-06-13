@@ -101,12 +101,14 @@ export default function InterviewPage() {
         
         const chunk = new TextDecoder().decode(value);
         fullText += chunk;
-        setStreamingText(prev => prev + chunk);
+        // Clean streaming text to hide token mid-stream
+        setStreamingText(fullText.replace(/\[?_?NEXT_QUESTION_?\]?/i, '').trim());
       }
 
-      // Handle AI State Transition Token [NEXT_QUESTION]
-      const shouldAdvance = fullText.includes('[NEXT_QUESTION]');
-      const cleanText = fullText.replace('[NEXT_QUESTION]', '').trim();
+      // Robust check for transition token using regex
+      const tokenRegex = /\[?_?NEXT_QUESTION_?\]?/i;
+      const shouldAdvance = tokenRegex.test(fullText);
+      const cleanText = fullText.replace(tokenRegex, '').trim();
 
       setHistory(prev => [...prev, { role: 'assistant', content: cleanText }]);
       speak(cleanText, () => {
