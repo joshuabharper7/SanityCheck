@@ -25,6 +25,7 @@ export const PipelineBlueprintSchema = z.object({
   jobTitle: z.string(),
   companyName: z.string(),
   experienceLevel: z.string(),
+  languageCode: z.string().default('en-US'),
   stages: z.array(PipelineStageSchema)
 });
 
@@ -42,7 +43,7 @@ export const EvaluationScorecardSchema = z.object({
   localStudyPlan: z.array(z.object({
     concept: z.string(),
     reason: z.string(),
-    localOllamaRefCommand: z.string().describe("E.g. 'ollama run qwen3-coder \"Explain clustered indexes in SQL Server\"'")
+    localOllamaRefCommand: z.string().describe("A natural language prompt for the user to study this concept. E.g. 'Explain the storage layout of a clustered index...'")
   }))
 });
 

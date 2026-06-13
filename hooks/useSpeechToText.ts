@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
-export function useSpeechToText() {
+export function useSpeechToText(language: string = 'en-US') {
   const [isListening, setIsListening] = useState(false);
   const [liveStreamText, setLiveStreamText] = useState('');
   const [accumulatedTranscript, setAccumulatedTranscript] = useState('');
@@ -20,7 +20,7 @@ export function useSpeechToText() {
     const recognizer = new SpeechRecognition();
     recognizer.continuous = true;
     recognizer.interimResults = true;
-    recognizer.lang = 'en-US';
+    recognizer.lang = language;
 
     recognizer.onresult = (event: any) => {
       let interim = '';

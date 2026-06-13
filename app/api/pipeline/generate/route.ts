@@ -5,7 +5,7 @@ import { PipelineBlueprintSchema } from '@/utils/schema';
 
 export async function POST(req: Request) {
   try {
-    const { jd, forceCoding, skipCoding } = await req.json();
+    const { jd, forceCoding, skipCoding, skipScreening, language } = await req.json();
 
     if (!jd) {
       return NextResponse.json({ error: "Job Description is required" }, { status: 400 });
@@ -17,6 +17,8 @@ export async function POST(req: Request) {
       USER CONFIGURATION:
       - forceCoding: ${forceCoding || false}
       - skipCoding: ${skipCoding || false}
+      - skipScreening: ${skipScreening || false}
+      - LANGUAGE: ${language || 'English (en-US)'}
 
       JOB DESCRIPTION:
       ${jd}

@@ -14,6 +14,21 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(false);
   const [blueprint, setBlueprint] = useState<PipelineBlueprint | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  // Configuration State
+  const [skipScreening, setSkipScreening] = useState(false);
+  const [forceCoding, setForceCoding] = useState(false);
+  const [skipCoding, setSkipCoding] = useState(false);
+  const [language, setLanguage] = useState('en-US');
+
+  const languages = [
+    { label: 'English', value: 'en-US' },
+    { label: 'Spanish', value: 'es-ES' },
+    { label: 'French', value: 'fr-FR' },
+    { label: 'German', value: 'de-DE' },
+    { label: 'Mandarin', value: 'zh-CN' },
+    { label: 'Japanese', value: 'ja-JP' },
+  ];
 
   const handleGenerate = async () => {
     if (!jd.trim()) return;
@@ -23,7 +38,13 @@ export default function DashboardPage() {
     try {
       const res = await fetch('/api/pipeline/generate', {
         method: 'POST',
-        body: JSON.stringify({ jd }),
+        body: JSON.stringify({ 
+          jd, 
+          skipScreening, 
+          forceCoding, 
+          skipCoding,
+          language: languages.find(l => l.value === language)?.label + " (" + language + ")"
+        }),
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -89,15 +110,49 @@ export default function DashboardPage() {
                       onChange={(e) => setJd(e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-wrap gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                      <input type="checkbox" className="w-4 h-4 rounded border-[var(--border-neutral)] text-[var(--brand-accent)] focus:ring-[var(--brand-accent)] bg-transparent" />
-                      <span className="text-sm opacity-70 group-hover:opacity-100 transition-opacity">Force Coding Stage</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                      <input type="checkbox" className="w-4 h-4 rounded border-[var(--border-neutral)] text-[var(--brand-accent)] focus:ring-[var(--brand-accent)] bg-transparent" />
-                      <span className="text-sm opacity-70 group-hover:opacity-100 transition-opacity">Skip Whiteboard</span>
-                    </label>
+                  <div className="flex flex-wrap gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase opacity-40">Interview Language</label>
+                      <select 
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="block w-full p-2 rounded-lg bg-[var(--bg-canvas)] border border-[var(--border-neutral)] text-sm outline-none focus:border-[var(--brand-accent)]"
+                      >
+                        {languages.map(l => (
+                          <option key={l.value} value={l.value}>{l.label}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex flex-wrap gap-4 items-end pb-1">
+                      <label className="flex items-center gap-2 cursor-pointer group">
+                        <input 
+                          type="checkbox" 
+                          checked={skipScreening}
+                          onChange={(e) => setSkipScreening(e.target.checked)}
+                          className="w-4 h-4 rounded border-[var(--border-neutral)] text-[var(--brand-accent)] focus:ring-[var(--brand-accent)] bg-transparent" 
+                        />
+                        <span className="text-sm opacity-70 group-hover:opacity-100 transition-opacity">Skip Screening</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer group">
+                        <input 
+                          type="checkbox" 
+                          checked={forceCoding}
+                          onChange={(e) => setForceCoding(e.target.checked)}
+                          className="w-4 h-4 rounded border-[var(--border-neutral)] text-[var(--brand-accent)] focus:ring-[var(--brand-accent)] bg-transparent" 
+                        />
+                        <span className="text-sm opacity-70 group-hover:opacity-100 transition-opacity">Force Coding</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer group">
+                        <input 
+                          type="checkbox" 
+                          checked={skipCoding}
+                          onChange={(e) => setSkipCoding(e.target.checked)}
+                          className="w-4 h-4 rounded border-[var(--border-neutral)] text-[var(--brand-accent)] focus:ring-[var(--brand-accent)] bg-transparent" 
+                        />
+                        <span className="text-sm opacity-70 group-hover:opacity-100 transition-opacity">Skip Whiteboard</span>
+                      </label>
+                    </div>
                   </div>
                 </CardContent>
                 <CardFooter>

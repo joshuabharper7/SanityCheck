@@ -197,7 +197,7 @@ export default function RecapPage() {
               <Lightbulb className="h-5 w-5 text-[var(--brand-accent)]" /> 
               Localized Study Plan
             </CardTitle>
-            <p className="text-xs opacity-60">Actionable steps to bridge your knowledge gaps using local AI.</p>
+            <p className="text-xs opacity-60">Review your specific knowledge gaps and use these tailored prompts with your local AI to study and improve.</p>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {scorecard.localStudyPlan.map((item, i) => (
@@ -209,16 +209,19 @@ export default function RecapPage() {
                 <p className="text-xs opacity-60 leading-relaxed italic">
                   "{item.reason}"
                 </p>
-                <div className="relative group">
-                  <div className="bg-black/40 rounded-lg p-3 pr-10 font-mono text-[10px] text-[var(--brand-accent)] overflow-x-auto whitespace-nowrap scrollbar-hide">
-                    {item.localOllamaRefCommand}
+                <div className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase opacity-40 italic">Suggested prompt for knowledge growth:</p>
+                  <div className="relative group">
+                    <div className="bg-black/40 rounded-lg p-3 pr-10 font-mono text-[10px] text-[var(--brand-accent)] overflow-x-auto whitespace-normal break-words leading-relaxed">
+                      {item.localOllamaRefCommand}
+                    </div>
+                    <button 
+                      onClick={() => copyToClipboard(item.localOllamaRefCommand, i)}
+                      className="absolute right-2 top-2 p-1.5 rounded-md hover:bg-white/10 transition-colors"
+                    >
+                      {copiedIndex === i ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3 opacity-40 group-hover:opacity-100" />}
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => copyToClipboard(item.localOllamaRefCommand, i)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md hover:bg-white/10 transition-colors"
-                  >
-                    {copiedIndex === i ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3 opacity-40 group-hover:opacity-100" />}
-                  </button>
                 </div>
               </div>
             ))}

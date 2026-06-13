@@ -15,7 +15,7 @@ export function useSpeechSynthesis() {
     window.speechSynthesis.onvoiceschanged = updateVoices;
   }, []);
 
-  const speak = useCallback((text: string, onEnd?: () => void) => {
+  const speak = useCallback((text: string, onEnd?: () => void, language: string = 'en-US') => {
     if (!window.speechSynthesis) return;
 
     // Cancel any ongoing speech
@@ -23,15 +23,17 @@ export function useSpeechSynthesis() {
 
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Try to find a high-quality English voice
-    const preferredVoice = voices.find(v => v.lang === 'en-US' && v.name.includes('Google')) || 
-                          voices.find(v => v.lang.startsWith('en')) || 
+    // Try to find a high-quality voice for the specified language
+    const preferredVoice = voices.find(v => v.lang === language && v.name.includes('Google')) || 
+                          voices.find(v => v.lang === language) ||
+                          voices.find(v => v.lang.startsWith(language.split('-')[0])) ||
                           voices[0];
     
     if (preferredVoice) {
       utterance.voice = preferredVoice;
     }
-
+    
+    utterance.lang = language;
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
 

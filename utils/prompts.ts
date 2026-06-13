@@ -1,33 +1,42 @@
 export const PIPELINE_GENERATION_PROMPT = `
-You are an expert technical hiring manager and enterprise recruiter. Your goal is to construct a customized 3-to-4 stage interview roadmap based on a Job Description (JD).
+You are an expert technical hiring manager and enterprise recruiter. Your goal is to construct a customized 2-to-4 stage interview roadmap based on a Job Description (JD).
+
+MINIMAL INPUT RULE:
+- If the provided JD is very short (e.g., just a job title like "Software Engineer"), use your internal expert knowledge of that role's industry-standard requirements, typical tech stacks, and common interview questions to generate a high-fidelity pipeline. Do NOT fail or ask for more info; provide the best possible roadmap based on the title alone.
 
 RULES FOR STAGE CLASSIFICATION:
-- If 'forceCoding' is TRUE, you MUST include exactly one stage with type="WHITEBOARD_REVIEW".
-- If 'skipCoding' is TRUE, all stages MUST be type="CONVERSATIONAL".
-- If neither override is set, evaluate the JD:
-  * For coding-intensive roles (e.g., Software Engineer, React Developer, Full-stack), include a Stage 3 of type "WHITEBOARD_REVIEW" featuring an algorithmic or design puzzle.
-  * For healthcare, medical, or clinical roles (e.g., Nurse, Physician, Therapist), include a Stage 3 of type "SCENARIO_WALKTHROUGH" focusing on a high-stakes clinical simulation (e.g., patient decompensation, triage emergency).
-  * For testing, QA, and security roles, replace coding with type="SCENARIO_WALKTHROUGH" focusing on regression planning or intrusion plans.
-  * For DevOps and SRE, set Stage 3 to type="SCENARIO_WALKTHROUGH" focusing on an infrastructure incident response scenario.
-  * For general professional roles (Sales, Marketing, HR), all stages should be "CONVERSATIONAL" unless a specific scenario makes sense.
+1. MANDATORY SCREENING: Unless 'skipScreening' is TRUE, Stage 1 MUST be "Initial Screening". It should be a high-level conversation about background, motivation, and cultural fit.
+2. TECHNICAL BRANCHING:
+   - For coding-intensive roles, include a Stage with type="WHITEBOARD_REVIEW".
+   - For healthcare, medical, or clinical roles, include a Stage with type="SCENARIO_WALKTHROUGH" focusing on clinical simulations.
+   - For testing/QA/Security/DevOps, include a Stage with type="SCENARIO_WALKTHROUGH" focusing on domain-specific incidents or planning.
+3. STAGE COUNT: Total stages must be between 2 and 4.
+4. OVERRIDES:
+   - If 'forceCoding' is TRUE, you MUST include exactly one stage with type="WHITEBOARD_REVIEW".
+   - If 'skipCoding' is TRUE, NO stages should be type="WHITEBOARD_REVIEW".
+   - If 'skipScreening' is TRUE, Stage 1 should be a domain-specific technical or QA stage, NOT a screening.
+
+LOCALIZATION RULE:
+- You MUST generate the entire JSON response (stage names, interviewer personas, question text, and rubrics) in the specified LANGUAGE.
 
 Generate your response strictly as a JSON object matching this schema:
 {
   "jobTitle": "Extracted Job Title",
   "companyName": "Extracted Company Name (default to 'General')",
   "experienceLevel": "Junior | Mid-Level | Senior | Lead | Staff",
+  "languageCode": "ISO Language Code (e.g., en-US, es-ES)",
   "stages": [
     {
       "id": "unique-uuid-string",
       "name": "Stage Display Name",
       "type": "CONVERSATIONAL" | "WHITEBOARD_REVIEW" | "SCENARIO_WALKTHROUGH",
-      "focusTechStack": ["React", "SQL Server"], // Use for Key Skills or Certifications in non-tech roles (e.g., ["ACLS", "Patient Care"]). MUST ALWAYS BE INCLUDED.
-      "interviewerPersona": "Tone guidelines for the AI. Maintain this attitude.",
+      "focusTechStack": ["Skill A", "Skill B"], // MUST ALWAYS BE INCLUDED.
+      "interviewerPersona": "Tone guidelines for the AI in the target LANGUAGE.",
       "questionPool": [
         {
           "id": "q-1",
-          "questionText": "Explicit question text to read to candidate.",
-          "idealRubric": "Specific core concepts, syntax details, or framework patterns required to pass."
+          "questionText": "Explicit question text in the target LANGUAGE.",
+          "idealRubric": "Specific core concepts or patterns in the target LANGUAGE."
         }
       ]
     }
@@ -65,7 +74,7 @@ You must respond strictly with a JSON object that matches this schema layout:
     {
       "concept": "SQL Clustered Indexes",
       "reason": "Fumbled the structural difference between clustered and non-clustered pages.",
-      "localOllamaRefCommand": "ollama run qwen3-coder \"Explain the physical storage layout of a clustered index vs non-clustered index in SQL Server\""
+      "localOllamaRefCommand": "Explain the physical storage layout of a clustered index vs non-clustered index in SQL Server"
     }
   ]
 }

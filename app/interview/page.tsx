@@ -33,7 +33,7 @@ export default function InterviewPage() {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { speak, stop: stopSpeaking, isSpeaking } = useSpeechSynthesis();
-  const { isListening, liveStreamText, startListening, stopAndSubmit } = useSpeechToText();
+  const { isListening, liveStreamText, startListening, stopAndSubmit } = useSpeechToText(blueprint?.languageCode || 'en-US');
 
   // Auto-scroll logic
   const scrollToBottom = () => {
@@ -115,7 +115,7 @@ export default function InterviewPage() {
         if (shouldAdvance) {
           nextQuestion();
         }
-      });
+      }, blueprint?.languageCode || 'en-US');
       setStreamingText('');
       
     } catch (error) {
@@ -139,7 +139,7 @@ export default function InterviewPage() {
     const firstQuestion = firstStage.questionPool[0].questionText;
     const initialMessage = `Hello. I am your interviewer today. We are starting with the ${firstStage.name} stage. Here is your first question: ${firstQuestion}`;
     setHistory([{ role: 'assistant', content: initialMessage }]);
-    speak(initialMessage);
+    speak(initialMessage, undefined, blueprint?.languageCode || 'en-US');
   };
 
   const nextQuestion = () => {
@@ -170,7 +170,7 @@ export default function InterviewPage() {
       : `Let's move to the next item. ${nextQuestionText}`;
 
     setHistory(prev => [...prev, { role: 'assistant', content: transitionMessage }]);
-    speak(transitionMessage);
+    speak(transitionMessage, undefined, blueprint?.languageCode || 'en-US');
   };
 
   if (!blueprint) {
@@ -182,7 +182,7 @@ export default function InterviewPage() {
   }
 
   const currentStage = blueprint.stages[currentStageIndex];
-  const isSplitScreen = currentStage.type === 'WHITEBOARD_REVIEW' || currentStage.type === 'SCENARIO_WALKTHROUGH';
+  const isSplitScreen = currentStage.type === 'WHITEBOARD_REVIEW';
 
   if (!isStarted) {
     return (
