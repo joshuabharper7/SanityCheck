@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --background: var(--bg-canvas);
+  --foreground: var(--fg-text);
+  --card: var(--card-canvas);
+  --primary: var(--brand-accent);
+  --border: var(--border-neutral);
+  --shadow-glow: var(--shadow-brand);
+}
+
+:root, [data-theme="sleek-dark"] {
+  --bg-canvas: #090d16;
+  --fg-text: #f8fafc;
+  --card-canvas: #121b2d;
+  --brand-accent: #06b6d4; /* Cyan Electric */
+  --border-neutral: #1e293b;
+  --shadow-brand: rgba(6, 182, 212, 0.2);
+}
+
+[data-theme="clean-light"] {
+  --bg-canvas: #f8fafc;
+  --fg-text: #0f172a;
+  --card-canvas: #ffffff;
+  --brand-accent: #2563eb; /* Cobalt Blue */
+  --border-neutral: #cbd5e1;
+  --shadow-brand: rgba(37, 99, 235, 0.1);
+}
+
+[data-theme="ocean-blue"] {
+  --bg-canvas: #020c1b;
+  --fg-text: #e2e8f0;
+  --card-canvas: #0a192f;
+  --brand-accent: #64ffda; /* Teal Aquamarine */
+  --border-neutral: #172a45;
+  --shadow-brand: rgba(100, 255, 218, 0.2);
+}
+
+[data-theme="forest-green"] {
+  --bg-canvas: #050f08;
+  --fg-text: #ecfdf5;
+  --card-canvas: #0d2414;
+  --brand-accent: #10b981; /* Forest Emerald */
+  --border-neutral: #115e2e;
+  --shadow-brand: rgba(16, 185, 129, 0.2);
+}
+
+[data-theme="deep-purple"] {
+  --bg-canvas: #070412;
+  --fg-text: #f5f3ff;
+  --card-canvas: #110924;
+  --brand-accent: #8b5cf6; /* Royal Amethyst */
+  --border-neutral: #29184a;
+  --shadow-brand: rgba(139, 92, 246, 0.2);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphic Cards & Glow Components */
+.glass-panel {
+  background: rgba(var(--card-canvas), 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.breathe-glow {
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 12px var(--shadow-glow);
+  }
+  50% {
+    box-shadow: 0 0 24px var(--shadow-glow);
+  }
+}
