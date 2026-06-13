@@ -25,7 +25,7 @@ export default function Home() {
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
             Master Your Next <br /> 
-            <span className="text-[var(--brand-accent)] drop-shadow-[0_0_15px_var(--shadow-brand)]">Technical Interview</span>
+            <span className="text-[var(--brand-accent)] drop-shadow-[0_0_15px_var(--shadow-brand)]">Professional Interview</span>
           </h1>
           <p className="text-xl md:text-2xl opacity-70 max-w-2xl mx-auto leading-relaxed">
             Run infinite high-fidelity mock interviews entirely on your local machine. 

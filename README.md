@@ -9,12 +9,14 @@ SanityCheck is a privacy-first, zero-dependency, open-source mock interview plat
 - **Total Data Sovereignty**: Confidential resumes, job descriptions, and interview recordings never leave your computer.
 - **Zero-Cost Iteration**: Run infinite mock interviews without third-party API token fees.
 - **Conversational Low-Latency**: Achieves near real-time feedback loops using local LLMs.
-- **"No-BS" Grading**: A specialized evaluation engine that rewards technical honesty and penalizes hallucinations.
+- **"No-BS" Grading**: A specialized evaluation engine that rewards honesty and penalizes bluffing or hallucinations.
 
 ## ✨ Key Features
 
 - **Voice Interface**: Hands-free interview experience using browser-native Speech-to-Text and Text-to-Speech.
-- **Smart Pipeline Generation**: Analyzes any Job Description to craft a customized 3-4 stage interview roadmap.
+- **Cross-Domain Versatility**: Built-in logic dynamically pivots between Software Engineering whiteboards, Medical/Clinical patient scenarios, and Business behavioral questions.
+- **Global Multi-Language Support**: Support for English, Spanish, French, German, Mandarin, and Japanese interviews.
+- **Smart Pipeline Generation**: Analyzes any Job Description to craft a customized 2-4 stage interview roadmap.
 - **Split-Screen Workspace**: Transitions from conversational chat to a technical sandbox for whiteboard and scenario assessments.
 - **Hardware-Adaptive Tiering**: Choose from LITE, STANDARD, or PRO tiers to match your machine's VRAM/RAM capabilities.
 - **Dynamic Theming**: 5 high-fidelity visual styles including `Sleek Dark`, `Ocean Blue`, and `Royal Amethyst`.
