@@ -21,25 +21,34 @@ SanityCheck is a privacy-first, zero-dependency, open-source mock interview plat
 - **Hardware-Adaptive Tiering**: Choose from LITE, STANDARD, or PRO tiers to match your machine's VRAM/RAM capabilities.
 - **Dynamic Theming**: 5 high-fidelity visual styles including `Sleek Dark`, `Ocean Blue`, and `Royal Amethyst`.
 
-## 🛠️ Prerequisites
+## 🛠️ Prerequisites & Setup
 
-1.  **Node.js**: Version 18 or higher.
-2.  **Ollama**: Ensure [Ollama](https://ollama.com/) is installed and running (`ollama serve`).
+1.  **Ollama**: SanityCheck requires [Ollama](https://ollama.com/) to be running locally (`ollama serve`).
+    - The app's built-in **Onboarding Wizard** will detect if you have it and provide a direct download link if needed.
+2.  **Models**: Use the built-in wizard to pull the required models (`llama3.1`, `qwen2.5-coder`, etc.) with a single click.
 
-## 📥 Installation & Setup
+## 📥 Installation
 
-1.  **Clone the Repository**:
+### For Developers
+1.  **Clone & Install**:
     ```bash
     git clone https://github.com/joshuabharper7/SanityCheck.git
     cd SanityCheck
-    ```
-2.  **Install Dependencies**:
-    ```bash
     npm install
     ```
-3.  **Launch the App**:
-    - **Windows**: Double-click the `SanityCheck.exe` or `Start-SanityCheck.bat` in the root folder.
-    - **Developer Mode**: Run `npm run dev` and navigate to `http://localhost:3333`.
+2.  **Launch**: Double-click `SanityCheck.exe` or run `npm run dev`.
+
+### For Buddies (Non-Technical)
+If you received a **Portable Zip** from a friend:
+1.  **Unzip** the folder.
+2.  **Run**: Double-click `Run-Portable.bat`. 
+    - *Note: No Node.js installation is required for this mode!*
+
+## 📦 Creating a Portable Release
+To share SanityCheck with a non-technical friend:
+1.  Run `Build-Portable.bat`.
+2.  Zip the resulting `SanityCheck-Portable` folder and send it over.
+3.  They can now run the full AI experience with zero configuration.
 
 ## 🧠 Model Tiers
 
