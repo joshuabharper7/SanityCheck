@@ -27,6 +27,11 @@ echo [3/5] Copying application files...
 xcopy /s /e /i /y ".next\standalone" "%REL_DIR%" >nul
 xcopy /s /e /i /y "public" "%REL_DIR%\public" >nul
 xcopy /s /e /i /y ".next\static" "%REL_DIR%\.next\static" >nul
+
+:: [NEW] Force remove persistent sharp artifacts that cause ERR_DLOPEN_FAILED on Windows
+if exist "%REL_DIR%\node_modules\next\node_modules\@img" rd /s /q "%REL_DIR%\node_modules\next\node_modules\@img"
+if exist "%REL_DIR%\node_modules\next\node_modules\sharp" rd /s /q "%REL_DIR%\node_modules\next\node_modules\sharp"
+
 copy "SanityCheck.exe" "%REL_DIR%\SanityCheck.exe" >nul
 copy "Start-SanityCheck.bat" "%REL_DIR%\Start-SanityCheck.bat" >nul
 copy "Setup-Shortcut.ps1" "%REL_DIR%\Setup-Shortcut.ps1" >nul

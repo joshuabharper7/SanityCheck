@@ -18,8 +18,6 @@ export const metadata: Metadata = {
   description: "Privacy-first mock interview platform powered by local LLMs.",
   icons: {
     icon: "/logo.png",
-    shortcut: "/logo.ico",
-    apple: "/logo.png",
   },
 };
 
