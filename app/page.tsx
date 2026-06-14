@@ -37,9 +37,11 @@ export default function Home() {
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button size="lg" variant="secondary" className="w-full sm:w-auto px-8 py-6 text-lg rounded-xl">
-              View Source
-            </Button>
+            <a href="https://github.com/joshuabharper7/SanityCheck" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+              <Button size="lg" variant="secondary" className="w-full px-8 py-6 text-lg rounded-xl">
+                View Source
+              </Button>
+            </a>
           </div>
         </div>
 
