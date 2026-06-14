@@ -12,15 +12,14 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
 export const metadata: Metadata = {
   title: "SanityCheck | Local-First AI Interview Simulator",
   description: "Privacy-first mock interview platform powered by local LLMs.",
   icons: {
     icon: "/logo.png",
-  },
-};
-  icons: {
-    icon: "/logo.png",
+    shortcut: "/logo.ico",
+    apple: "/logo.png",
   },
 };
 
