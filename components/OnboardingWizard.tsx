@@ -211,11 +211,37 @@ export const OnboardingWizard: React.FC = () => {
             {pullingModel === currentConfig.grader && <div className="mt-4"><Progress value={pullProgress} label={pullStatus} /></div>}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="secondary" onClick={checkSystem} disabled={loading || !!pullingModel}>Refresh Status</Button>
-          <Button variant="primary" disabled={!isOllamaRunning || !interviewerReady || !graderReady || !!pullingModel} onClick={() => window.location.href = '/dashboard'}>
-            Proceed to Dashboard
-          </Button>
+        <CardFooter className="flex flex-col gap-6">
+          {!isOllamaRunning && (
+            <div className="w-full p-6 rounded-xl bg-red-500/10 border border-red-500/20 text-[var(--fg-text)] space-y-4">
+              <div className="flex items-center gap-2 text-red-500">
+                <AlertTriangle className="h-5 w-5" />
+                <p className="font-bold">Ollama Daemon Unreachable</p>
+              </div>
+              <p className="text-sm opacity-80 leading-relaxed">
+                {status?.message || "Please ensure Ollama is installed and running on your machine."}
+              </p>
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                <a 
+                  href="https://ollama.com/download/windows" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors"
+                >
+                  <Download className="mr-2 h-4 w-4" /> Download Ollama for Windows
+                </a>
+                <Button variant="secondary" size="sm" onClick={checkSystem}>
+                  I've launched it, retry!
+                </Button>
+              </div>
+            </div>
+          )}
+          <div className="flex justify-between w-full">
+            <Button variant="secondary" onClick={checkSystem} disabled={loading || !!pullingModel}>Refresh Status</Button>
+            <Button variant="primary" disabled={!isOllamaRunning || !interviewerReady || !graderReady || !!pullingModel} onClick={() => window.location.href = '/dashboard'}>
+              Proceed to Dashboard
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </div>
