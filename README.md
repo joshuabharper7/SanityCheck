@@ -50,6 +50,12 @@ To share SanityCheck with a non-technical friend:
 2.  Zip the resulting `SanityCheck-Portable` folder and send it over.
 3.  They can now run the full AI experience with zero configuration.
 
+## 🖥️ Desktop Shortcut
+To create a branded shortcut on your Windows Desktop with the official SanityCheck logo:
+1.  Navigate to the project (or unzipped portable) folder.
+2.  Right-click **`Setup-Shortcut.ps1`**.
+3.  Select **"Run with PowerShell"**.
+
 ## 🧠 Model Tiers
 
 - **LITE** (< 8GB RAM): `llama3.2:3b` / `qwen2.5-coder:7b`
