@@ -48,6 +48,17 @@ export default function RecapPage() {
       if (!res.ok) throw new Error(data.error || 'Evaluation failed');
       
       setScorecard(data);
+
+      // Save to History
+      const historyItem = {
+        id: crypto.randomUUID(),
+        timestamp: Date.now(),
+        blueprint,
+        scorecard: data
+      };
+
+      const existingHistory = JSON.parse(localStorage.getItem('sanity_check_history') || '[]');
+      localStorage.setItem('sanity_check_history', JSON.stringify([historyItem, ...existingHistory]));
     } catch (err: any) {
       setError(err.message);
     } finally {

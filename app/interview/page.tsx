@@ -182,7 +182,8 @@ export default function InterviewPage() {
   }
 
   const currentStage = blueprint.stages[currentStageIndex];
-  const isSplitScreen = currentStage.type === 'WHITEBOARD_REVIEW';
+  const currentQuestion = currentStage.questionPool[currentQuestionIndex];
+  const isSplitScreen = currentQuestion.needsCode;
 
   if (!isStarted) {
     return (
@@ -348,6 +349,15 @@ export default function InterviewPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={stopSpeaking} 
+                    disabled={!isSpeaking}
+                    title="Skip current AI speech"
+                  >
+                    Skip Speech <VolumeX className="ml-2 h-4 w-4" />
+                  </Button>
                   <Button variant="secondary" size="sm" onClick={nextQuestion} disabled={isProcessing || isSpeaking}>
                     Skip Question <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>

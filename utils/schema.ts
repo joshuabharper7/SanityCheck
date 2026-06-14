@@ -9,6 +9,7 @@ export const StageTypeSchema = z.enum([
 export const QuestionSchema = z.object({
   id: z.string(),
   questionText: z.string(),
+  needsCode: z.boolean().default(false).describe("Set to TRUE if this specific question requires the code editor/sandbox to be visible."),
   idealRubric: z.string().describe("Explicit technical elements or structures required to score highly.")
 });
 
@@ -38,8 +39,8 @@ export const EvaluationScorecardSchema = z.object({
     honestyAndHumility: z.number().min(0).max(100).describe("High marks for admitting limitations gracefully; heavily penalized for fabrications."),
     starAlignment: z.number().min(0).max(100).describe("Measures structured layout in behavioral responses.")
   }),
-  strengths: z.array(z.string()).length(3),
-  weaknesses: z.array(z.string()).length(3),
+  strengths: z.array(z.string()).min(0).max(5),
+  weaknesses: z.array(z.string()).min(0).max(5),
   localStudyPlan: z.array(z.object({
     concept: z.string(),
     reason: z.string(),
@@ -51,3 +52,10 @@ export type EvaluationScorecard = z.infer<typeof EvaluationScorecardSchema>;
 export type PipelineBlueprint = z.infer<typeof PipelineBlueprintSchema>;
 export type PipelineStage = z.infer<typeof PipelineStageSchema>;
 export type StageType = z.infer<typeof StageTypeSchema>;
+
+export interface InterviewHistoryItem {
+  id: string;
+  timestamp: number;
+  blueprint: PipelineBlueprint;
+  scorecard: EvaluationScorecard;
+}

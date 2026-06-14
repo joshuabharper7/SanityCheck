@@ -16,6 +16,12 @@ RULES FOR STAGE CLASSIFICATION:
    - If 'skipCoding' is TRUE, NO stages should be type="WHITEBOARD_REVIEW".
    - If 'skipScreening' is TRUE, Stage 1 should be a domain-specific technical or QA stage, NOT a screening.
 
+TECHNICAL QUESTION RIGOR & FORMAT:
+- In "WHITEBOARD_REVIEW" stages, technical questions must be fairly straightforward, common industry-standard coding problems (e.g., "Implement a function to check if a string is a palindrome," "Find the first non-repeating character in a stream").
+- AVOID asking for full-scale architectures, restful APIs with auth, or complex systems unless you provide a code scaffold to work from.
+- You can ask "Bug Hunt" questions where you provide a code snippet and ask the candidate to find the error or inefficiency.
+- For EVERY question, you must set "needsCode" to TRUE if the question requires the candidate to type code or diagrams. If it's a verbal explanation, set it to FALSE.
+
 LOCALIZATION RULE:
 - You MUST generate the entire JSON response (stage names, interviewer personas, question text, and rubrics) in the specified LANGUAGE.
 
@@ -30,12 +36,13 @@ Generate your response strictly as a JSON object matching this schema:
       "id": "unique-uuid-string",
       "name": "Stage Display Name",
       "type": "CONVERSATIONAL" | "WHITEBOARD_REVIEW" | "SCENARIO_WALKTHROUGH",
-      "focusTechStack": ["Skill A", "Skill B"], // MUST ALWAYS BE INCLUDED.
+      "focusTechStack": ["Skill A", "Skill B"],
       "interviewerPersona": "Tone guidelines for the AI in the target LANGUAGE.",
       "questionPool": [
         {
           "id": "q-1",
           "questionText": "Explicit question text in the target LANGUAGE.",
+          "needsCode": true | false,
           "idealRubric": "Specific core concepts or patterns in the target LANGUAGE."
         }
       ]
@@ -58,6 +65,11 @@ CRITICAL GRADING CRITERIA:
    - Strongly penalize bluffing (-20 points to honestyAndHumility and technicalAccuracy) if they tried to fabricate technical details to cover up knowledge gaps.
 4. STAR Alignment: Check if behavioral responses are structured using Situation, Task, Action, and Result.
 
+STRICTNESS PENALTY (CRITICAL):
+- If a candidate uses the "Skip Question" feature or provides a non-answer (e.g., "I don't know" without any attempt to explain their thought process) for a significant portion of the interview, you MUST give them a FAILING grade (Overall Score < 50).
+- Skipping all questions in a stage results in a 0 for that stage's metrics.
+- Skipping the entire interview must result in an Overall Score of 0. Do NOT give partial credit for "honesty" if they did not participate in the core assessment.
+
 You must respond strictly with a JSON object that matches this schema layout:
 {
   "overallScore": 84,
@@ -68,8 +80,8 @@ You must respond strictly with a JSON object that matches this schema layout:
     "honestyAndHumility": 95,
     "starAlignment": 75
   },
-  "strengths": ["Item 1", "Item 2", "Item 3"],
-  "weaknesses": ["Item 1", "Item 2", "Item 3"],
+  "strengths": ["Item 1", "Item 2", "Item 3"], // Provide 0 to 5 items. If none, return empty array [].
+  "weaknesses": ["Item 1", "Item 2", "Item 3"], // Provide 0 to 5 items. If none, return empty array [].
   "localStudyPlan": [
     {
       "concept": "SQL Clustered Indexes",
