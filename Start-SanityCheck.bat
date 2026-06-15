@@ -17,18 +17,24 @@ if %errorlevel% neq 0 (
 )
 
 :: Detect if we are in the source root or standalone folder
-if exist ".next\standalone\server.js" (
-    echo [INFO] Production standalone build detected.
-    set "RUN_DIR=.next\standalone"
-    set "CMD=node server.js"
+if exist "package.json" (
+    echo [INFO] Source directory detected. Starting in development mode...
+    set "RUN_DIR=."
+    set "CMD=npm run dev"
 ) else if exist "server.js" (
     echo [INFO] Running from standalone directory.
     set "RUN_DIR=."
     set "CMD=node server.js"
-) else (
-    echo [INFO] Source directory detected. Starting in development mode...
+) else if exist ".next\standalone\server.js" (
+    echo [INFO] Production standalone build detected.
+    echo [WARN] Running standalone from source requires manual asset mapping.
+    echo [WARN] Falling back to dev mode for reliability.
     set "RUN_DIR=."
     set "CMD=npm run dev"
+) else (
+    echo [ERROR] Could not detect a valid SanityCheck installation.
+    pause
+    exit /b
 )
 
 :: Check if port 3333 is already in use
