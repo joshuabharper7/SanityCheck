@@ -65,17 +65,18 @@ export function useSpeechToText(language: string = 'en-US') {
     setIsListening(true);
   }, []);
 
-  const stopAndSubmit = useCallback(() => {
-    if (!recognitionInstance.current) return '';
+  const stopListening = useCallback(() => {
+    if (!recognitionInstance.current) return;
     recognitionInstance.current.stop();
     setIsListening(false);
-    
-    // Combine what we finished and what might still be in interim
-    const result = (accumulatedTranscript + ' ' + liveStreamText).trim();
+  }, []);
+
+  const resetTranscript = useCallback(() => {
     setAccumulatedTranscript('');
     setLiveStreamText('');
-    return result;
-  }, [accumulatedTranscript, liveStreamText]);
+  }, []);
 
-  return { isListening, liveStreamText, startListening, stopAndSubmit };
+  const transcript = (accumulatedTranscript + ' ' + liveStreamText).trim();
+
+  return { isListening, transcript, startListening, stopListening, resetTranscript };
 }

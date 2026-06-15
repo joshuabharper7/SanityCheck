@@ -19,7 +19,8 @@ import {
   Play,
   Terminal,
   Code,
-  Square
+  Square,
+  Send
 } from 'lucide-react';
 
 export default function InterviewPage() {
@@ -30,10 +31,11 @@ export default function InterviewPage() {
   const [streamingText, setStreamingText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+  const [inputValue, setInputValue] = useState('');
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { speak, stop: stopSpeaking, isSpeaking } = useSpeechSynthesis();
-  const { isListening, liveStreamText, startListening, stopAndSubmit } = useSpeechToText(blueprint?.languageCode || 'en-US');
+  const { isListening, transcript, startListening, stopListening, resetTranscript } = useSpeechToText(blueprint?.languageCode || 'en-US');
 
   // Auto-scroll logic
   const scrollToBottom = () => {
@@ -42,7 +44,14 @@ export default function InterviewPage() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [history, streamingText, liveStreamText]);
+  }, [history, streamingText]);
+
+  // Sync speech transcript to input field in real-time
+  useEffect(() => {
+    if (isListening) {
+      setInputValue(transcript);
+    }
+  }, [transcript, isListening]);
 
   useEffect(() => {
     const saved = localStorage.getItem('sanity_check_blueprint');
@@ -57,16 +66,23 @@ export default function InterviewPage() {
 
   const handleMicToggle = async () => {
     if (isListening) {
-      const transcript = stopAndSubmit();
-      if (transcript) {
-        const newUserMessage = { role: 'user' as const, content: transcript };
-        const updatedHistory = [...history, newUserMessage];
-        setHistory(updatedHistory);
-        processAIResponse(updatedHistory);
-      }
+      stopListening();
     } else {
+      setInputValue('');
+      resetTranscript();
       startListening();
     }
+  };
+
+  const handleSend = () => {
+    if (!inputValue.trim() || isProcessing) return;
+    
+    const newUserMessage = { role: 'user' as const, content: inputValue.trim() };
+    const updatedHistory = [...history, newUserMessage];
+    setHistory(updatedHistory);
+    setInputValue('');
+    resetTranscript();
+    processAIResponse(updatedHistory);
   };
 
   const processAIResponse = async (chatHistory: { role: 'user' | 'assistant', content: string }[]) => {
@@ -307,15 +323,6 @@ export default function InterviewPage() {
                   </div>
                 </div>
               )}
-
-              {isListening && (
-                <div className="flex justify-end pt-4">
-                  <div className="max-w-[85%] p-4 rounded-2xl bg-[var(--brand-accent)]/10 border border-[var(--brand-accent)]/20 text-[var(--brand-accent)] rounded-tr-none italic">
-                    <p className="text-sm">{liveStreamText || "Listening..."}</p>
-                    <p className="text-[9px] mt-2 font-bold uppercase tracking-widest opacity-60">Recording - Click Mic to Stop</p>
-                  </div>
-                </div>
-              )}
               
               {/* Reference point for auto-scroll */}
               <div ref={messagesEndRef} />
@@ -323,44 +330,92 @@ export default function InterviewPage() {
           </div>
 
           {/* Chat Controls */}
-          <div className="p-6 border-t border-[var(--border-neutral)]/50 bg-[var(--card-canvas)]/30">
-             <div className="max-w-2xl mx-auto flex items-center justify-between gap-6">
-                <div className="flex items-center gap-6">
-                  <Button 
-                    size="lg"
-                    variant={isListening ? "primary" : "outline"}
-                    className={`w-16 h-16 rounded-full transition-all duration-300 ${isListening ? 'scale-110 shadow-[0_0_25px_var(--shadow-brand)] animate-pulse' : ''}`}
-                    onClick={handleMicToggle}
-                    disabled={isProcessing || isSpeaking}
-                  >
-                    {isListening ? <Square className="h-6 w-6 fill-white" /> : <Mic className="h-6 w-6" />}
-                  </Button>
-
-                  <div className="flex flex-col items-start gap-1">
-                    <div className={`h-4 flex items-center gap-0.5`}>
-                      {isSpeaking && [...Array(5)].map((_, i) => (
-                        <div key={i} className="w-0.5 bg-[var(--brand-accent)] rounded-full animate-pulse" style={{ height: `${20 + Math.random() * 80}%`, animationDuration: `${0.5 + Math.random()}s` }} />
-                      ))}
+          <div className="p-4 md:p-6 border-t border-[var(--border-neutral)]/50 bg-[var(--card-canvas)]/30 space-y-4">
+             <div className="max-w-3xl mx-auto space-y-4">
+                {/* Input Area */}
+                <div className="relative group">
+                  <textarea
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder={isListening ? "Listening to your answer..." : "Type your answer here..."}
+                    className={`w-full min-h-[100px] max-h-[200px] p-4 rounded-xl bg-black/20 border transition-all resize-none focus:outline-none focus:ring-2 focus:ring-[var(--brand-accent)]/50 ${
+                      isListening ? 'border-[var(--brand-accent)] shadow-[0_0_15px_var(--shadow-brand)]' : 'border-[var(--border-neutral)]/50'
+                    }`}
+                    disabled={isProcessing}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && e.ctrlKey) {
+                        handleSend();
+                      }
+                    }}
+                  />
+                  {isListening && (
+                    <div className="absolute top-3 right-3 flex gap-1">
+                      <span className="h-2 w-2 rounded-full bg-[var(--brand-accent)] animate-pulse" />
+                      <span className="h-2 w-2 rounded-full bg-[var(--brand-accent)] animate-pulse [animation-delay:0.2s]" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">
-                      {isSpeaking ? 'AI Speaking' : isListening ? 'Recording Answer' : 'Waiting'}
-                    </span>
-                  </div>
+                  )}
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    onClick={stopSpeaking} 
-                    disabled={!isSpeaking}
-                    title="Skip current AI speech"
-                  >
-                    Skip Speech <VolumeX className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button variant="secondary" size="sm" onClick={nextQuestion} disabled={isProcessing || isSpeaking}>
-                    Skip Question <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      size="lg"
+                      variant={isListening ? "primary" : "outline"}
+                      className={`h-12 px-5 rounded-xl flex items-center gap-3 transition-all duration-300 ${isListening ? 'shadow-[0_0_20px_var(--shadow-brand)] animate-pulse' : ''}`}
+                      onClick={handleMicToggle}
+                      disabled={isProcessing || isSpeaking}
+                      title={isListening ? "Stop Recording" : "Start Recording"}
+                    >
+                      {isListening ? (
+                        <>
+                          <Square className="h-5 w-5 fill-current" />
+                          <span className="text-xs font-black uppercase tracking-wider">Stop</span>
+                        </>
+                      ) : (
+                        <>
+                          <Mic className="h-5 w-5" />
+                          <span className="text-xs font-black uppercase tracking-wider">Record</span>
+                        </>
+                      )}
+                    </Button>
+
+                    <Button
+                      size="lg"
+                      variant="primary"
+                      className="h-12 px-6 rounded-xl flex items-center gap-2"
+                      onClick={handleSend}
+                      disabled={isProcessing || isListening || !inputValue.trim()}
+                    >
+                      {isProcessing ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+                      Send Answer
+                    </Button>
+
+                    <div className="hidden sm:flex flex-col items-start gap-0.5">
+                      <div className={`h-3 flex items-center gap-0.5`}>
+                        {isSpeaking && [...Array(5)].map((_, i) => (
+                          <div key={i} className="w-0.5 bg-[var(--brand-accent)] rounded-full animate-pulse" style={{ height: `${20 + Math.random() * 80}%`, animationDuration: `${0.5 + Math.random()}s` }} />
+                        ))}
+                      </div>
+                      <span className="text-[9px] font-bold uppercase tracking-widest opacity-40">
+                        {isSpeaking ? 'AI Speaking' : isListening ? 'Recording' : 'Ready'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      onClick={stopSpeaking} 
+                      disabled={!isSpeaking}
+                      title="Skip current AI speech"
+                    >
+                      <VolumeX className="h-4 w-4" />
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={nextQuestion} disabled={isProcessing || isSpeaking}>
+                      Skip <ChevronRight className="ml-1 h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
              </div>
           </div>
