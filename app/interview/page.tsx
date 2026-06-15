@@ -374,7 +374,7 @@ export default function InterviewPage() {
                       ) : (
                         <>
                           <Mic className="h-5 w-5" />
-                          <span className="text-xs font-black uppercase tracking-wider">Record</span>
+                          <span className="text-xs font-black uppercase tracking-wider">Speak</span>
                         </>
                       )}
                     </Button>
